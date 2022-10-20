@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">NYArticles</string>
+
+    <string name="loading_msg">Loading articles. Please wait...</string>
+    <string name="error_msg">Failed to load articles. Please try again</string>
+</resources>
