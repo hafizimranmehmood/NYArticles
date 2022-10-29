@@ -7,13 +7,17 @@ import com.example.nyarticles.domain.models.Response.Loading
 import com.example.nyarticles.domain.usecases.Interactor
 import com.example.nyarticles.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ArticleViewModel @Inject constructor(private val interactor: Interactor): ViewModel() {
+class ArticleViewModel @Inject constructor(
+    private val interactor: Interactor,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+): ViewModel() {
 
     private val _articleId = MutableLiveData<Long>()
 
@@ -46,7 +50,7 @@ class ArticleViewModel @Inject constructor(private val interactor: Interactor): 
     fun refresh(articles: List<Article>){
         //Refresh using remote API if local db is empty or after a day
         val shouldRefresh = articles.isEmpty() || (System.currentTimeMillis() - articles[0].date) >= Constants.ONE_DAY_THRESH_HOLD
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(dispatcher){
             if(shouldRefresh)
                 interactor.deleteArticles()
 

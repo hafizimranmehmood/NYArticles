@@ -94,20 +94,4 @@ class ArticleModule {
     fun providesLocalArticleDataSource(
         articleDao: ArticleDao
     ): LocalArticleDataSource = LocalArticleDataSourceImpl(articleDao)
-
-    /**
-     * Provides ArticleRepository dependency
-     *
-     * @param localArticleDataSource required by repository to perform curd operation on local database
-     * @param remoteArticleDataSource required to download articles from api.nytimes.com
-     * @return ArticleRepository to perform operations on data layer
-     *
-     * */
-
-    @Provides
-    @Singleton
-    fun providesArticleRepository(
-        localArticleDataSource: LocalArticleDataSource,
-        remoteArticleDataSource: RemoteArticleDataSource
-    ): ArticleRepository = ArticleRepositoryImpl(localArticleDataSource, remoteArticleDataSource)
 }

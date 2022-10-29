@@ -1,12 +1,15 @@
 package com.example.nyarticles.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.example.nyarticles.MainCoroutineRule
 import com.example.nyarticles.data.repository.FakeArticleRepository
 import com.example.nyarticles.domain.models.Article
 import com.example.nyarticles.domain.usecases.*
 import com.example.nyarticles.getOrAwaitValue
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -17,6 +20,8 @@ class ArticleViewModelTest{
 
     @get: Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
+    @get: Rule
+    val mainCoroutineRule = MainCoroutineRule()
     private lateinit var fakeArticleRepository: FakeArticleRepository
     private lateinit var viewModel: ArticleViewModel
     private val article1 = Article(1,"title1", "byline1", "section1", "publisheddate1", 1)
@@ -34,7 +39,7 @@ class ArticleViewModelTest{
             DeleteArticles(fakeArticleRepository),
             ObserveResponse(fakeArticleRepository)
         )
-        viewModel = ArticleViewModel(interactor)
+        viewModel = ArticleViewModel(interactor, Dispatchers.Main)
     }
 
     @Test
@@ -64,5 +69,13 @@ class ArticleViewModelTest{
         viewModel.loadArticle(article2.id)
         val article = viewModel.article.getOrAwaitValue()
         assertThat(article).isEqualTo(article2)
+    }
+
+    @Test
+    fun getArticles_responseShouldWorkProperly() = mainCoroutineRule.runBlockingTest{
+        viewModel.refresh(emptyList())
+        assertThat(viewModel.loading.getOrAwaitValue()).isFalse()
+        val articles = viewModel.articles.getOrAwaitValue()
+        assertThat(articles.size).isEqualTo(3)
     }
 }

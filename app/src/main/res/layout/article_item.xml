@@ -13,7 +13,7 @@
 
     </data>
 
-    <RelativeLayout
+    <RelativeLayout android:id="@+id/article_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="14dp"
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"/>
 
-        <RelativeLayout
+        <RelativeLayout android:id="@+id/o_t"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/right_icon"

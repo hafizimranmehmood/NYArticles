@@ -24,6 +24,7 @@ class ArticleAdapter(private val viewModel: ArticleViewModel) : ListAdapter<Arti
         fun bind(viewModel: ArticleViewModel, article: Article){
             binding.article = article
             binding.viewmodel = viewModel
+            binding.executePendingBindings()
         }
 
         companion object {
